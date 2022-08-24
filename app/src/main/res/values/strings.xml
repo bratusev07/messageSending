@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Умный пешеходный переход</string>
+    <string name="zero_length">Введите сообщение</string>
+    <string name="max_length">Превышена допустимая длинна сообщения</string>
+    <string name="min_length">Минимальная длинна сообщения: </string>
+    <string name="permission_deny">Разрешение на отправку сообщений не получено</string>
+    <string name="write_your_message">Текст предупреждения</string>
+</resources>
