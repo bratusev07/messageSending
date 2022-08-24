@@ -3,4 +3,4 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent"
     android:id="@+id/splashImage"
-    android:src="@drawable/icon"/>
+    android:src="@drawable/test4"/>

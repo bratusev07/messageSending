@@ -63,31 +63,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void layoutSwipe(){
+    private void layoutSwipe() {
         commandLayout.setOnTouchListener(new OnSwipeTouchListener(this) {
             public void onSwipeRight() {
                 layoutChange(--position);
             }
+
             public void onSwipeLeft() {
                 layoutChange(++position);
             }
         });
     }
 
-    private void layoutChange(int newPosition){
-        if(newPosition == commandList.size()){ newPosition = 0; position = 0;}
-        if(newPosition == -1){ newPosition = commandList.size()-1; position = newPosition;}
+    private void layoutChange(int newPosition) {
+        if (newPosition == commandList.size()) {
+            newPosition = 0;
+            position = 0;
+        }
+        if (newPosition == -1) {
+            newPosition = commandList.size() - 1;
+            position = newPosition;
+        }
         image.setImageResource(commandList.get(newPosition).getResId());
         textView.setText(commandList.get(newPosition).getNameSign());
     }
 
     private void fillList() {
-        commandList.add(new CustomCommand("/deti", R.drawable.ic_deti, "Дети"));
-        commandList.add(new CustomCommand("/veter", R.drawable.ic_veter, "Боковой ветер"));
-        commandList.add(new CustomCommand("/ogr_skor20", R.drawable.ogr20, "Максималь-\nная скорость 20 км/ч"));
-        commandList.add(new CustomCommand("/ogr_skor40", R.drawable.ogr40, "Максималь-\nная скорость 40 км/ч"));
-        commandList.add(new CustomCommand("/dor_raboty", R.drawable.dorojnie_raboti, "Дорожные работы"));
         commandList.add(new CustomCommand("/perehod", R.drawable.perehod, "Пешеходный переход"));
+        commandList.add(new CustomCommand("/deti", R.drawable.deti, "Дети"));
+        commandList.add(new CustomCommand("/veter", R.drawable.veter, "Боковой ветер"));
+        commandList.add(new CustomCommand("/dor_raboty", R.drawable.dorojnie_raboty, "Дорожные работы"));
+        commandList.add(new CustomCommand("/opastnost", R.drawable.opastnost, "Прочие опасности"));
+        commandList.add(new CustomCommand("/nerov_doroga", R.drawable.nerov_doroga, "Неровная дорога"));
+        commandList.add(new CustomCommand("/skol_doroga", R.drawable.skol_doroga, "Скользкая дорога"));
+        commandList.add(new CustomCommand("/ogr_skor20", R.drawable.ogr20, "Максимальная скорость\n20 км/ч"));
+        commandList.add(new CustomCommand("/ogr_skor40", R.drawable.ogr40, "Максимальная скорость\n40 км/ч"));
     }
 
     private void findViews() {
@@ -230,7 +240,7 @@ class OnSwipeTouchListener implements View.OnTouchListener {
 
     private final GestureDetector gestureDetector;
 
-    public OnSwipeTouchListener (Context ctx){
+    public OnSwipeTouchListener(Context ctx) {
         gestureDetector = new GestureDetector(ctx, new GestureListener());
     }
 
@@ -264,8 +274,7 @@ class OnSwipeTouchListener implements View.OnTouchListener {
                         }
                         result = true;
                     }
-                }
-                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                } else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
                     if (diffY > 0) {
                         onSwipeBottom();
                     } else {
