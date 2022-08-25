@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.telephony.SmsManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -160,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if (messageSize > maxLength)
             makeToast(getResources().getString(R.string.max_length) + ": " + maxLength);
         else
-            sendSms(commandList.get(position).getCommandText() + ";" + message + ";" + counter + ";");
+            sendSms("INFO:" + commandList.get(position).getCommandText() + ";" + message + ";" + counter);
     }
 
     private void sendSms(String message) {
@@ -179,7 +180,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onReceive(Context arg0, Intent arg1) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS sent",
+                        Toast.makeText(getBaseContext(), "Данные отправлены!",
                                 Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
@@ -208,12 +209,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onReceive(Context arg0, Intent arg1) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(getBaseContext(), "SMS delivered",
+                        Toast.makeText(getBaseContext(), "Данные доставлены",
                                 Toast.LENGTH_SHORT).show();
                         savePref();
                         break;
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(getBaseContext(), "SMS not delivered",
+                        Toast.makeText(getBaseContext(), "Данные не доставлены",
                                 Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -267,16 +268,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.counter_down:
                 if (counter > 1) --counter;
                 if (counter == 1) makeToast(getResources().getString(R.string.minTimeText));
-                counterText.setText(counter + "");
                 break;
             case R.id.counter_up:
                 if (counter < 24) ++counter;
                 if (counter == 24) makeToast(getResources().getString(R.string.maxTimeText));
-                counterText.setText(counter + "");
                 break;
             default:
                 break;
         }
+
+        String pref = "";
+        if (counter / 10 != 1 && counter % 10 == 1) pref = " час";
+        else if (counter / 10 != 1 && counter % 10 >= 2 && counter % 10 <= 4) pref = " часа";
+        else pref = " часов";
+        counterText.setText(counter + pref);
     }
 }
 
