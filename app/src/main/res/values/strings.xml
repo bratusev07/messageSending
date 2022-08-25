@@ -5,4 +5,6 @@
     <string name="min_length">Минимальная длинна сообщения: </string>
     <string name="permission_deny">Разрешение на отправку сообщений не получено</string>
     <string name="write_your_message">Текст предупреждения</string>
+    <string name="maxTimeText">Максимальное время : 24 ч.</string>
+    <string name="minTimeText">Минимальное время : 1 ч.</string>
 </resources>

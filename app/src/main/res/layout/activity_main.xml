@@ -4,16 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="30dp"
-    android:fitsSystemWindows="true"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <Button
+        android:id="@+id/sendBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:backgroundTint="#0d69e1"
+        android:minWidth="150dp"
+        android:minHeight="50dp"
+        android:text="Отправить"
+        android:textAllCaps="true"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
         android:id="@+id/myLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="20dp"
-        android:orientation="horizontal"
         android:background="@drawable/border"
+        android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -26,27 +41,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="Знак"
             android:gravity="center"
             android:textColor="@color/black"
             android:textSize="26sp" />
     </LinearLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:layout_marginTop="50dp"
         android:id="@+id/textInputLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="35dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="15dp"
         android:scrollbars="vertical"
         app:counterEnabled="true"
         app:counterMaxLength="20"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/myLayout"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/myLayout">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/textMessage"
@@ -63,50 +76,109 @@
 
     </com.google.android.material.textfield.TextInputLayout>
 
-    <Button
-        android:id="@+id/sendBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:minWidth="150dp"
-        android:minHeight="50dp"
-        android:text="Отправить"
-        android:textAllCaps="true"
-        android:textSize="16sp"
-        android:backgroundTint="#0d69e1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:layout_width="384dp"
-        android:layout_height="216dp"
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@+id/sendBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textInputLayout">
 
-<!--        <TextView
-            android:layout_width="117dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:fontFamily="@font/matricha"
-            android:gravity="center"
-            android:text="Внимание\nДети"
-            android:textColor="@color/black"
-            android:textSize="26sp"
-            android:textStyle="bold" />-->
+        <View
+            android:layout_width="9dp"
+            android:layout_height="180dp"
+            android:background="@color/black"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="5dp"
+            android:layout_gravity="center|right"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:src="@drawable/test3"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginBottom="25dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/perekladina" />
 
+        <LinearLayout
+            android:gravity="center"
+            android:layout_width="260dp"
+            android:layout_height="90dp"
+            android:layout_gravity="center"
+            android:layout_marginRight="7dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/black"
+            android:orientation="horizontal"
+            app:layout_constraintDimensionRatio="H, 8:3">
 
-        <!--android:contentDescription="@string/my_image_description"-->
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/preview_image"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center"
+                android:src="@drawable/perehod" />
 
+            <TextView
+                android:id="@+id/preview_text"
+                android:layout_width="match_parent"
+                android:layout_margin="5dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/matricha"
+                android:gravity="center"
+                android:text="Внимание дети"
+                android:textColor="@color/white"
+                android:textSize="38sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/counter_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" – "
+            android:backgroundTint="#0d69e1"
+            android:textSize="22sp"
+            android:layout_marginLeft="35dp"
+            android:layout_marginTop="20dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center|top"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="10dp"
+            android:gravity="left|top"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/counter"
+                android:text="1"
+                android:enabled="true"
+                android:focusable="false"
+                android:gravity="center"
+                android:minWidth="190dp"
+                android:hint="Время отображения"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:layout_gravity="center|top"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/counter_up"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" + "
+            android:layout_gravity="right"
+            android:backgroundTint="#0d69e1"
+            android:layout_marginRight="35dp"
+            android:layout_marginTop="20dp"
+            android:textSize="22sp"/>
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

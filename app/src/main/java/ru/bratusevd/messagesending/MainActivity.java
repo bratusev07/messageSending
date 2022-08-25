@@ -12,9 +12,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -32,18 +35,25 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
 
+    private static final String APP_PREFERENCES = "status";
     private final String phoneNumber = "+7(***)**-**-***";
-    private final int minLength = 1;
+    private final int minLength = 0;
     private final int maxLength = 20;
     private final int REQUEST_CODE_PERMISSION = 8;
     private ArrayList<CustomCommand> commandList = new ArrayList<>();
     private int position = 0;
+    private int counter = 1;
 
     private Button sendBtn;
+    private Button countUp;
+    private Button countDown;
     private EditText messageText;
     private LinearLayout commandLayout;
     private ImageView image;
     private TextView textView;
+    private TextView previewText;
+    private EditText counterText;
+    private ImageView previewImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int permissionStatus = ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS);
         findViews();
         fillList();
+        setMessageChanged();
         layoutChange(position);
         layoutSwipe();
         if (permissionStatus == PackageManager.PERMISSION_GRANTED) {
@@ -86,38 +97,70 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         image.setImageResource(commandList.get(newPosition).getResId());
         textView.setText(commandList.get(newPosition).getNameSign());
+        previewImage.setImageResource(commandList.get(newPosition).getBlackResId());
+    }
+
+    private void setMessageChanged() {
+        messageText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                previewText.setText(getMessage());
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                previewText.setText(getMessage());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                previewText.setText(getMessage());
+            }
+        });
+    }
+
+    private String getMessage() {
+        return messageText.getText().toString();
     }
 
     private void fillList() {
-        commandList.add(new CustomCommand("/perehod", R.drawable.perehod, "Пешеходный переход"));
-        commandList.add(new CustomCommand("/deti", R.drawable.deti, "Дети"));
-        commandList.add(new CustomCommand("/veter", R.drawable.veter, "Боковой ветер"));
-        commandList.add(new CustomCommand("/dor_raboty", R.drawable.dorojnie_raboty, "Дорожные работы"));
-        commandList.add(new CustomCommand("/opastnost", R.drawable.opastnost, "Прочие опасности"));
-        commandList.add(new CustomCommand("/nerov_doroga", R.drawable.nerov_doroga, "Неровная дорога"));
-        commandList.add(new CustomCommand("/skol_doroga", R.drawable.skol_doroga, "Скользкая дорога"));
-        commandList.add(new CustomCommand("/ogr_skor20", R.drawable.ogr20, "Максимальная скорость\n20 км/ч"));
-        commandList.add(new CustomCommand("/ogr_skor40", R.drawable.ogr40, "Максимальная скорость\n40 км/ч"));
+        commandList.add(new CustomCommand("/perehod", R.drawable.perehod, R.drawable.black_perehod, "Пешеходный переход"));
+        commandList.add(new CustomCommand("/deti", R.drawable.deti, R.drawable.black_deti, "Дети"));
+        commandList.add(new CustomCommand("/veter", R.drawable.veter, R.drawable.black_veter, "Боковой ветер"));
+        commandList.add(new CustomCommand("/dor_raboty", R.drawable.dorojnie_raboty, R.drawable.black_raboty, "Дорожные работы"));
+        commandList.add(new CustomCommand("/opastnost", R.drawable.opastnost, R.drawable.black_warning, "Прочие опасности"));
+        commandList.add(new CustomCommand("/nerov_doroga", R.drawable.nerov_doroga, R.drawable.black_bad_dorogy, "Неровная дорога"));
+        commandList.add(new CustomCommand("/skol_doroga", R.drawable.skol_doroga, R.drawable.black_slipery_road, "Скользкая дорога"));
+        commandList.add(new CustomCommand("/ogr_skor20", R.drawable.ogr20, R.drawable.black_ogr_20, "Максимальная скорость\n20 км/ч"));
+        commandList.add(new CustomCommand("/ogr_skor40", R.drawable.ogr40, R.drawable.black_ogr_40, "Максимальная скорость\n40 км/ч"));
     }
 
     private void findViews() {
         sendBtn = findViewById(R.id.sendBtn);
+        countDown = findViewById(R.id.counter_down);
+        countUp = findViewById(R.id.counter_up);
         messageText = findViewById(R.id.textMessage);
         commandLayout = findViewById(R.id.myLayout);
         image = findViewById(R.id.commandImage);
         textView = findViewById(R.id.commandText);
+        previewText = findViewById(R.id.preview_text);
+        previewImage = findViewById(R.id.preview_image);
+        counterText = findViewById(R.id.counter);
+
+        loadPref();
+        countUp.setOnClickListener(this);
+        countDown.setOnClickListener(this);
     }
 
     private void sendClick() {
         String message = messageText.getText().toString();
-        sendSms(commandList.get(position).getCommandText());
-        /*int messageSize = message.length();
-        if (messageSize == 0) makeToast(getResources().getString(R.string.zero_length));
-        else if (messageSize < minLength)
+        int messageSize = message.length();
+        if (messageSize < minLength)
             makeToast(getResources().getString(R.string.min_length) + minLength);
         else if (messageSize > maxLength)
             makeToast(getResources().getString(R.string.max_length) + ": " + maxLength);
-        else sendSms(message);*/
+        else
+            sendSms(commandList.get(position).getCommandText() + ";" + message + ";" + counter + ";");
     }
 
     private void sendSms(String message) {
@@ -167,6 +210,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     case Activity.RESULT_OK:
                         Toast.makeText(getBaseContext(), "SMS delivered",
                                 Toast.LENGTH_SHORT).show();
+                        savePref();
                         break;
                     case Activity.RESULT_CANCELED:
                         Toast.makeText(getBaseContext(), "SMS not delivered",
@@ -182,6 +226,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void makeToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    private void savePref() {
+        SharedPreferences mSettings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putInt("position", position);
+        editor.putString("message", getMessage());
+        editor.apply();
+    }
+
+    private void loadPref() {
+        SharedPreferences sharedPreferences = getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+        position = sharedPreferences.getInt("position", 0);
+        messageText.setText(sharedPreferences.getString("message", ""));
+        previewText.setText(sharedPreferences.getString("message", ""));
     }
 
     @Override
@@ -205,6 +264,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.sendBtn:
                 sendClick();
                 break;
+            case R.id.counter_down:
+                if (counter > 1) --counter;
+                if (counter == 1) makeToast(getResources().getString(R.string.minTimeText));
+                counterText.setText(counter + "");
+                break;
+            case R.id.counter_up:
+                if (counter < 24) ++counter;
+                if (counter == 24) makeToast(getResources().getString(R.string.maxTimeText));
+                counterText.setText(counter + "");
+                break;
             default:
                 break;
         }
@@ -214,12 +283,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 class CustomCommand {
     private String commandText;
     private int resId;
+    private int blackResId;
     private String nameSign;
 
-    public CustomCommand(String commandText, int resId, String nameSign) {
+    public CustomCommand(String commandText, int resId, int blackResId, String nameSign) {
         this.commandText = commandText;
         this.resId = resId;
+        this.blackResId = blackResId;
         this.nameSign = nameSign;
+    }
+
+    public int getBlackResId() {
+        return blackResId;
     }
 
     public String getCommandText() {
@@ -234,7 +309,6 @@ class CustomCommand {
         return nameSign;
     }
 }
-
 
 class OnSwipeTouchListener implements View.OnTouchListener {
 
